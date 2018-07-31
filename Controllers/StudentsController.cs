@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using efLazyLoading.dal;
 using efLazyLoading.dal.models;
+using efLazyLoading.dto;
 
 namespace efLazyLoading.Controllers
 {
@@ -21,20 +22,30 @@ namespace efLazyLoading.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Student>> GetAll()
+        public ActionResult<List<StudentDTO>> GetAll()
         {
-            return context.Students.ToList();
+            return context.Students.Select(s => ToDTO(s)).ToList();
         }
 
         [HttpGet("{id}", Name = "GetStudent")]
-        public ActionResult<Student> GetById(long id)
+        public ActionResult<StudentDTO> GetById(long id)
         {
             var item = context.Students.Find(id);
             if (item == null)
             {
                 return NotFound();
             }
-            return item;
+            return ToDTO(item);
+        }
+
+        private StudentDTO ToDTO(Student student)
+        {
+            StudentDTO dto = new StudentDTO();
+            dto.ID = student.ID;
+            dto.LastName = student.LastName;
+            dto.FirstMidName = student.FirstMidName;
+            dto.EnrollmentDate = student.EnrollmentDate;
+            return dto;
         }
     }
 }

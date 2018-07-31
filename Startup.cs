@@ -28,7 +28,7 @@ namespace efLazyLoading
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<DataAccessContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")), 
+                options.UseLazyLoadingProxies().UseNpgsql(Configuration.GetConnectionString("DefaultConnection")), 
                 128);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
