@@ -24,7 +24,7 @@ namespace efLazyLoading.Controllers
         [HttpGet]
         public ActionResult<List<StudentDTO>> GetAll()
         {
-            return context.Students.Select(s => ToDTO(s)).ToList();
+            return context.Students.Select(s => ToDTO(s, s.Enrollments.Count())).ToList();
         }
 
         [HttpGet("{id}", Name = "GetStudent")]
@@ -35,16 +35,17 @@ namespace efLazyLoading.Controllers
             {
                 return NotFound();
             }
-            return ToDTO(item);
+            return ToDTO(item, item.Enrollments.Count());
         }
 
-        private StudentDTO ToDTO(Student student)
+        private StudentDTO ToDTO(Student student, long count)
         {
             StudentDTO dto = new StudentDTO();
             dto.ID = student.ID;
             dto.LastName = student.LastName;
             dto.FirstMidName = student.FirstMidName;
             dto.EnrollmentDate = student.EnrollmentDate;
+            dto.EnrollmentCount = count;
             return dto;
         }
     }
